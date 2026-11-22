@@ -37,19 +37,32 @@ Instaladores sin ejecutar en `C:\Users\Sebz\Downloads\`: `PopcornFX-Editor_v2.25
 ## Estructura del repo
 - `mods/<NombreMod>/` — fuente de cada mod, replicando la estructura de `Live\` (p. ej. `mods/MiMod/blueprints/...`, `mods/MiMod/particles/...`, `mods/MiMod/ui/...`).
 - `tools/` — scripts propios (build, extracción, utilidades).
-- `build/` — salida de `.tmod` compilados (ignorado por git).
+- `build/` — copias de los `.tmod` compilados (ignorado por git). El devtool los genera en `Live\mods\`.
 - `.claude/commands/` — comandos `/fix`, `/refactor`, `/ship`.
 
 ## Compilar un .tmod
-Usar el devtool oficial de Trove:
+Sintaxis oficial (verificada en el texto `$BuildModTool_Usage` de `languages/en`, 2026-11-21):
 
-```bat
-"C:\Program Files (x86)\Steam\steamapps\common\Trove\Games\Trove\Live\devtool.bat" buildmod -p "<ruta absoluta a mods\NombreMod>" -o "<ruta absoluta a build\>"
+```
+Trove.exe -tool buildmod -author "Author Name" -title "Mod Title" -notes "Mod Notes" -preview "path/to/preview.png" -tags "a,b,c,d" - <file1> <file2>
+Trove.exe -tool buildmod -meta MetaFile.yaml
 ```
 
-- Si la sintaxis falla, ejecutar `devtool.bat help` y actualizar este archivo con la sintaxis correcta.
-- Extraer assets originales para referencia: `devtool.bat extractarchive "<carpeta de Live>" "<destino>"` (destino fuera del repo o en `extracted/`, que está ignorado).
-- Probar: copiar el `.tmod` a `...\Live\mods\` y arrancar Trove; revisar errores en `C:\Users\Sebz\AppData\Roaming\Trove\Trove.log`.
+Cómo usarla en este repo (ejecutar **desde la carpeta del mod** para que las rutas de los archivos coincidan con las del juego):
+
+```powershell
+Set-Location "mods\NombreMod"
+& "C:\Program Files (x86)\Steam\steamapps\common\Trove\Games\Trove\Live\devtool.bat" buildmod -author "zodiakoCEO" -title "NombreMod" -notes "Descripción" -preview "ui/preview.png" -tags "ui" - ui/archivo1.swf textures/archivo2.png
+```
+
+- **No hay parámetro de salida:** el resultado siempre es `C:\Program Files (x86)\Steam\steamapps\common\Trove\Games\Trove\Live\mods\<Title>.tmod`, y si ya existe se reemplaza. Mensaje de éxito: `Successfully built mods/<Title>.tmod`.
+- Son obligatorios `-author`, `-title` y al menos un archivo. Los archivos van después de un `-` suelto.
+- Las rutas, incluida la del preview, van con `/` y relativas a la raíz de assets (`ui/...`, `particles/...`, `blueprints/...`). El preview puede ser PNG, JPG o BLUEPRINT.
+- El devtool no imprime nada en consola (ni siquiera con `help`) y puede devolver código 1 aunque haya funcionado. Para confirmar el resultado, comprobar que el `.tmod` existe y que su fecha de modificación es reciente.
+- Variante `-meta MetaFile.yaml`: aún no se ha probado el formato del YAML. Usar la variante con parámetros hasta comprobarlo.
+- Desde el juego también existe `/buildmod title="..." author="..." notes="..." preview="..." tags="..."`, que empaqueta lo que haya en las carpetas `override`.
+- Extraer assets originales: `devtool.bat extractarchive "<carpeta con index.tfi>" "<destino>"` (probado con `languages\en`, funciona aunque devuelva código 1). El destino debe estar fuera del repo o en `extracted/`, que git ignora.
+- Probar: el `.tmod` ya queda en `Live\mods\`. Reiniciar Trove y revisar los errores en `C:\Users\Sebz\AppData\Roaming\Trove\Trove.log`.
 
 ## Reglas de trabajo
 - Autonomía total: aplicar fixes, refactors, renombrados, reestructuraciones y compilaciones de mods directamente, sin pedir confirmación.
