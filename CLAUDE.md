@@ -10,8 +10,9 @@ Workspace para crear, arreglar y compilar mods `.tmod` de Trove.
 | Trove (Steam, principal) | `C:\Program Files (x86)\Steam\steamapps\common\Trove\Games\Trove\Live\Trove.exe` |
 | Trove x64 (Steam) | `C:\Program Files (x86)\Steam\steamapps\common\Trove\Games\Trove\Live\Trove_x64.exe` |
 | Devtool oficial | `C:\Program Files (x86)\Steam\steamapps\common\Trove\Games\Trove\Live\devtool.bat` (= `Trove_x64.exe -tool %*`) |
-| Carpeta mods del juego (Steam) | `C:\Program Files (x86)\Steam\steamapps\common\Trove\Games\Trove\Live\mods` |
-| Trove (Glyph, secundaria) | `C:\Program Files (x86)\Glyph\Games\Trove\Live\Trove_x64.exe` |
+| Carpeta mods del juego (Steam) | `C:\Program Files (x86)\Steam\steamapps\common\Trove\Games\Trove\Live\mods` (vacía: no se usa) |
+| Trove (Glyph) | `C:\Program Files (x86)\Glyph\Games\Trove\Live\Trove_x64.exe` (tiene su propio `devtool.bat`) |
+| **Carpeta mods en uso (Glyph)** | `C:\Program Files (x86)\Glyph\Games\Trove\Live\mods` — aquí están todos los mods instalados; instalar y probar aquí. Los mods desactivados se renombran a `.tmod.disabled` |
 | Datos de usuario / configs de mods | `C:\Users\Sebz\AppData\Roaming\Trove` (`ModCfgs`, `mod_locks.json`, `Trove.log`) |
 
 Carpetas de assets en `Live\`: `blueprints`, `models`, `particles`, `prefabs`, `textures`, `ui`, `audio`, `shadersunified`, `languages`.
@@ -39,6 +40,8 @@ Instaladores sin ejecutar en `C:\Users\Sebz\Downloads\`: `PopcornFX-Editor_v2.25
 ## Estructura del repo
 - `mods/<NombreMod>/` — fuente de cada mod, replicando la estructura de `Live\` (p. ej. `mods/MiMod/blueprints/...`, `mods/MiMod/particles/...`, `mods/MiMod/ui/...`).
 - `tools/` — scripts propios (build, extracción, utilidades).
+  - `tools/tmod_extract.py <archivo.tmod> <destino>` — extrae un `.tmod` sin el devtool y escribe `tmod_meta.txt` con metadatos y tabla de archivos. Tolera `.tmod` con relleno tras los datos.
+- Mods con SWF: guardar el SWF original en `mods/<Mod>/original/`, solo las clases AS3 modificadas en `mods/<Mod>/scripts/` y un `build.ps1` que las recompile con `ffdec-cli.exe -importScript <orig.swf> <salida.swf> <carpeta que contiene scripts/>`. No recompilar clases que ffdec decompila con artefactos (`//unpopped`, bloques sueltos). Ejemplo: `mods/Redesigned-Crafting/`.
 - `build/` — copias de los `.tmod` compilados (ignorado por git). El devtool los genera en `Live\mods\`.
 - `.claude/commands/` — comandos `/fix`, `/refactor`, `/ship`.
 
@@ -64,6 +67,8 @@ Set-Location "mods\NombreMod"
 - Variante `-meta MetaFile.yaml`: aún no se ha probado el formato del YAML. Usar la variante con parámetros hasta comprobarlo.
 - Desde el juego también existe `/buildmod title="..." author="..." notes="..." preview="..." tags="..."`, que empaqueta lo que haya en las carpetas `override`.
 - Extraer assets originales: `devtool.bat extractarchive "<carpeta con index.tfi>" "<destino>"` (probado con `languages\en`, funciona aunque devuelva código 1). El destino debe estar fuera del repo o en `extracted/`, que git ignora.
+- Extraer un mod: `devtool.bat extractmod -file "<x.tmod>" -output "<dir>"` no generó nada (2026-11-21, con Trove abierto); usar `tools/tmod_extract.py`.
+- **`buildmod` no generó ningún `.tmod` con Trove abierto** (probado el 2026-11-22 con los devtools de Glyph y Steam: código 0 y ningún archivo). Cerrar Trove antes de compilar; pendiente confirmar que con el juego cerrado sí funciona.
 - Probar: el `.tmod` ya queda en `Live\mods\`. Reiniciar Trove y revisar los errores en `C:\Users\Sebz\AppData\Roaming\Trove\Trove.log`.
 
 ## Reglas de trabajo

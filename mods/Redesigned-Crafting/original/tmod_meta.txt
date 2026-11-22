@@ -1,0 +1,11 @@
+source: Redesigned - Crafting.tmod
+version: 1
+title: Redesigned - Crafting
+author: Geoflay
+notes: Design by Boldd
+previewPath: 
+gameVersion: 321
+tags: GUI
+modLoader: RTT
+files:
+  ui/crafting.swf  size=13386 offset=0 archive=0 hash=0xfafe90d1
