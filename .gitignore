@@ -1,0 +1,27 @@
+# Salida de compilación
+build/
+*.tmod
+
+# Assets extraídos del juego (no redistribuir)
+extracted/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Claude local
+.claude/settings.local.json
+
+# Editor / SO
+.vscode/
+*.swp
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Temporales / logs
+*.log
+*.tmp
+*.bak
