@@ -9,7 +9,9 @@ package
    // Fila de ingrediente de Redesigned - Crafting con búsqueda en el Market
    // (función portada de "Crafting item marketplace search").
    // Cambios respecto al original:
-   //  - toda la fila es clicable (hit area transparente) y muestra cursor de mano;
+   //  - toda la fila es clicable (hit area transparente);
+   //  - sin RegExp, buttonMode ni useHandCursor: con ellos el juego crasheaba
+   //    al abrir el banco (Iggy no es Flash completo; usar solo APIs que ya use el mod);
    //  - mouseChildren = false: el target del evento siempre es la fila;
    //  - al pasar el ratón: fondo resaltado y lupa junto al nombre;
    //  - el nombre a buscar se guarda en itemName (no se lee del TextField).
@@ -54,8 +56,6 @@ package
          this._need = param4;
          this.itemName = trim(param2);
          this.mouseChildren = false;
-         this.buttonMode = true;
-         this.useHandCursor = true;
          this.graphics.beginFill(0,0);
          this.graphics.drawRect(0,0,ROW_W,SIZE);
          this.graphics.endFill();
@@ -89,11 +89,22 @@ package
 
       private static function trim(param1:String) : String
       {
+         // Sin RegExp: Iggy (runtime de UI de Trove) no la soporta bien.
          if(param1 == null)
          {
             return "";
          }
-         return param1.replace(/^\s+|\s+$/g,"");
+         var _loc2_:int = 0;
+         var _loc3_:int = param1.length;
+         while(_loc2_ < _loc3_ && param1.charAt(_loc2_) == " ")
+         {
+            _loc2_++;
+         }
+         while(_loc3_ > _loc2_ && param1.charAt(_loc3_ - 1) == " ")
+         {
+            _loc3_--;
+         }
+         return param1.substr(_loc2_,_loc3_ - _loc2_);
       }
 
       // Misma lupa que dibuja Crafting.buildLoupe para el buscador de recetas.
