@@ -68,7 +68,10 @@ Set-Location "mods\NombreMod"
 - Desde el juego también existe `/buildmod title="..." author="..." notes="..." preview="..." tags="..."`, que empaqueta lo que haya en las carpetas `override`.
 - Extraer assets originales: `devtool.bat extractarchive "<carpeta con index.tfi>" "<destino>"` (probado con `languages\en`, funciona aunque devuelva código 1). El destino debe estar fuera del repo o en `extracted/`, que git ignora.
 - Extraer un mod: `devtool.bat extractmod -file "<x.tmod>" -output "<dir>"` no generó nada (2026-11-21, con Trove abierto); usar `tools/tmod_extract.py`.
-- **`buildmod` no generó ningún `.tmod` con Trove abierto** (probado el 2026-11-22 con los devtools de Glyph y Steam: código 0 y ningún archivo). Cerrar Trove antes de compilar; pendiente confirmar que con el juego cerrado sí funciona.
+- **`-tool buildmod` por línea de comandos no funciona** (probado el 2026-11-22 con Trove cerrado, desde `Live` como directorio de trabajo y con el archivo en `ui\override\`). Devuelve código 0 sin crear nada. El motivo se ve en `C:\Users\Sebz\AppData\Roaming\Trove\DevTool.log`: `Failed reading <archivo>` / `Error archiving override list`, tanto con rutas relativas como absolutas. `-meta` con YAML responde "Missing author, title...".
+- **Ruta que sí usar:** copiar los archivos a `Live\<carpeta>\override\` (p. ej. `Live\ui\override\crafting.swf`) y, dentro del juego, escribir en el chat `/buildmod title="..." author="..." notes="..." tags="..."`. Empaqueta **todos** los archivos de todas las carpetas `override`, así que antes hay que comprobar que solo estén los del mod. Después, reiniciar Trove y borrar los overrides.
+- `devtool.bat` necesita que el directorio de trabajo sea `Live`. Desde PowerShell, `Set-Location` no basta: usar `Start-Process -WorkingDirectory`.
+- No se puede crear un `.tmod` a mano: cada archivo lleva un hash de 32 bits que el juego verifica ("could not be verified. Mod will be ignored") y no coincide con crc32/adler/fnv/murmur3/xxh32/lookup3.
 - Probar: el `.tmod` ya queda en `Live\mods\`. Reiniciar Trove y revisar los errores en `C:\Users\Sebz\AppData\Roaming\Trove\Trove.log`.
 
 ## Reglas de trabajo
