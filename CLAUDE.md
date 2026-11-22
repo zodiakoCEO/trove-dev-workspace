@@ -28,9 +28,11 @@ Carpetas de assets en `Live\`: `blueprints`, `models`, `particles`, `prefabs`, `
 | Git | `C:\Program Files\Git\` | Instalado |
 | GitHub CLI | `C:\Program Files\GitHub CLI\gh.exe` | Instalado y autenticado |
 | VS Code | `C:\Users\Sebz\AppData\Local\Programs\Microsoft VS Code\` | Instalado |
-| Python | — | **No instalado** (solo el alias de Microsoft Store en `WindowsApps`). Instalar desde python.org o `winget install Python.Python.3.12` |
-| JPEXS / ffdec | — | **No instalado** (necesita Java, que tampoco está instalado) |
-| Java | — | **No instalado** |
+| Python 3.12.10 | `C:\Users\Sebz\AppData\Local\Programs\Python\Python312\python.exe` | Instalado (es el primero en el PATH; `py -3.12` apunta al mismo. El alias de `WindowsApps\python.exe` queda detrás) |
+| JPEXS / ffdec 26.5.0 (GUI) | `C:\Program Files (x86)\FFDec\ffdec.exe` | Instalado (también `ffdec.bat` y `ffdec.jar`) |
+| JPEXS / ffdec (CLI) | `C:\Program Files (x86)\FFDec\ffdec-cli.exe` | Instalado (`ffdec-cli.jar` al lado). No está en el PATH: usar la ruta completa |
+| Java 21 (Temurin) | `C:\Program Files\Eclipse Adoptium\jdk-21.0.13.10002-hotspot\bin\java.exe` | Instalado. `JAVA_HOME` (usuario) apunta aquí |
+| Java 8 (Oracle JRE 1.8.0_513) | `C:\Program Files\Java\jre1.8.0_513\bin\java.exe` | Instalado. Su shim `C:\Program Files (x86)\Common Files\Oracle\Java\java8path\java.exe` va **primero en el PATH**, así que `java` a secas ejecuta Java 8. Para Java 21, usar la ruta completa |
 
 Instaladores sin ejecutar en `C:\Users\Sebz\Downloads\`: `PopcornFX-Editor_v2.25.3.28568.exe`.
 
